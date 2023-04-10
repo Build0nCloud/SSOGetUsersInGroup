@@ -59,6 +59,7 @@ def lambda_handler(event, context):
 #---------------------------------------------
     myList = response["GroupMemberships"]
 #    index=int(0)
+    count=int(0)
     for i in myList:
 
         response = client.describe_user(
@@ -80,11 +81,13 @@ def lambda_handler(event, context):
             "Email" : primaryEmail
         }
         rList.append(myUserDict)
+        count += 1
 
         
 #
     returnDict = {
-            "Users" : rList
+            "Users" : rList,
+            "Count" : count
     }
     returnBody = json.dumps(returnDict)
     
@@ -99,3 +102,4 @@ def lambda_handler(event, context):
         
     return RESTresponse
     #raise Exception('Something went wrong')
+
