@@ -17,7 +17,7 @@ It will return a JSON of the members of that group in the following format:
 				Email: <Primary Email>
 			},
 		...
-		]
+		],
+    "Count"  : <The total number of users in the group>
 }
-
 The function returns a 502 error if the group provided is invalid
