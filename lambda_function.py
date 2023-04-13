@@ -15,7 +15,19 @@ def lambda_handler(event, context):
     
 #    myQueryString = "Administrators"
     queryStrings = event["queryStringParameters"]
-    myQueryString = queryStrings["q"]
+    if "q" in queryStrings :
+        myQueryString = queryStrings["q"]
+    else :
+        print(" No Query String")
+        RESTresponse = {
+            "statusCode": 502,
+            "headers": {
+                "Access-Control-Allow-Origin": '*'
+            },
+            "body": "No Query String, use ?q=<Group Name>",
+            "isBase64Encoded": False
+        }
+        return RESTresponse
     
 #-----------------------------------    
 # Get GroupID from group Display name    
@@ -68,11 +80,15 @@ def lambda_handler(event, context):
         )
         
 #Get Primary Email Value
-        myEmail = response["Emails"]
-        for x in myEmail:
-            if str(x["Primary"]) == "True" :
-                primaryEmail = x["Value"]
-        
+
+        primaryEmail = "No Primary Email"
+        if "Emails" in response :
+            myEmail = response["Emails"]
+            for x in myEmail:
+                if str(x["Primary"]) == "True" :
+                    primaryEmail = x["Value"]
+        else :
+            print("No Primary Email for user " + response["UserName"])
         
 # Create response
         myUserDict = {
