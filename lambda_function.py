@@ -66,10 +66,22 @@ def lambda_handler(event, context):
         IdentityStoreId= myIdentityStore, 
         GroupId= myGroupId
     )
+    myList = response["GroupMemberships"]
+    
+#  get more members if more than 100
+#  ----------------------------------- 
+    while "NextToken" in response:
+        response = client.list_group_memberships(
+            IdentityStoreId= myIdentityStore, 
+            GroupId= myGroupId,
+            NextToken=response["NextToken"]
+        )
+        myList.extend(response["GroupMemberships"])
+  
+    
 #---------------------------------------------
 # Get email value for user and return
 #---------------------------------------------
-    myList = response["GroupMemberships"]
 #    index=int(0)
     count=int(0)
     for i in myList:
@@ -118,4 +130,5 @@ def lambda_handler(event, context):
         
     return RESTresponse
     #raise Exception('Something went wrong')
+
 
